@@ -8,5 +8,3 @@ Make `script.sh` file executable using this command:
 chmod +x script.sh
 ```
 And run it with `./script.sh`
-```
-```
