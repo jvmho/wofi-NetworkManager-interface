@@ -29,18 +29,15 @@ networks=$(echo "$wifi_list" | awk -F: '
   exit 1;
 }
 
-# ===== ВЫБОР СЕТИ =====
 selected_line=$(printf "%s\n" "$networks" | wofi --lines=3 --dmenu --prompt "Select Wi-Fi to connect")
 [ -z "$selected_line" ] && exit 0
 
-# Извлекаем SSID
 chosen_network=$(printf "%s" "$selected_line" | sed -E 's/[[:space:]]+[0-9]+%$//')
 [ -z "$chosen_network" ] && {
   notify-send "Wi-Fi" "Couldn't identify the SSID";
   exit 1;
 }
 
-# ===== ПОДКЛЮЧЕНИЕ =====
 known_networks=$(nmcli -t -f NAME connection show)
 if echo "$known_networks" | grep -Fxq -- "$chosen_network"; then
   if nmcli connection up "$chosen_network" >/dev/null 2>&1; then
@@ -51,7 +48,6 @@ if echo "$known_networks" | grep -Fxq -- "$chosen_network"; then
   fi
 fi
 
-# ===== ПАРОЛЬ =====
 password=$(zenity --entry --title="Password to $chosen_network" --text="Enter the password")
 [ -z "$password" ] && exit 0
 
